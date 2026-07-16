@@ -1,588 +1,999 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BIG MUGS | منوی کافه</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0b2226;
-    --bg-2:#123236;
-    --panel:rgba(255,255,255,.025);
-    --panel-line:rgba(214,178,100,.16);
-    --gold:#d6b264;
-    --gold-bright:#e9cd8c;
-    --gold-soft:rgba(214,178,100,.4);
-    --gold-faint:rgba(214,178,100,.12);
-    --cream:#f0efe6;
-    --muted:#9fb4b0;
-    --danger:#e08a7a;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:
-      radial-gradient(1200px 560px at 50% -220px, #17403f 0%, transparent 62%),
-      radial-gradient(900px 460px at 110% 105%, #143336 0%, transparent 55%),
-      var(--bg);
-    color:var(--cream);
-    font-family:"Vazirmatn",system-ui,sans-serif;
-    min-height:100vh;
-    padding-bottom:90px;
-    overflow-x:hidden;
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>منوی BIG MUGS</title>
 
-  /* ---------- gold page frame ---------- */
-  .frame{
-    position:fixed; inset:10px; z-index:40; pointer-events:none;
-    border:1px solid rgba(214,178,100,.28);
-    border-radius:6px;
-  }
-  .frame i{
-    position:absolute; width:22px; height:22px;
-    border:1px solid var(--gold);
-  }
-  .frame i:nth-child(1){ top:-1px; right:-1px; border-left:none; border-bottom:none; border-top-right-radius:6px;}
-  .frame i:nth-child(2){ top:-1px; left:-1px;  border-right:none; border-bottom:none; border-top-left-radius:6px;}
-  .frame i:nth-child(3){ bottom:-1px; right:-1px; border-left:none; border-top:none; border-bottom-right-radius:6px;}
-  .frame i:nth-child(4){ bottom:-1px; left:-1px; border-right:none; border-top:none; border-bottom-left-radius:6px;}
-  @media (max-width:480px){ .frame{ inset:7px; } }
+    <meta name="theme-color" content="#0d2b23" />
 
-  /* ---------- header ---------- */
-  header{ text-align:center; padding:52px 16px 8px; position:relative; }
-  .cup{ width:74px; height:auto; margin-bottom:6px; opacity:.95; }
-  .cup .steam{ stroke-dasharray:60; stroke-dashoffset:60; animation:steam 2.6s ease forwards; }
-  .cup .steam.s2{ animation-delay:.45s; }
-  @keyframes steam{ to{ stroke-dashoffset:0; } }
-  .brand{
-    font-family:"Cormorant Garamond",serif;
-    font-weight:700;
-    font-size:clamp(2.5rem,10vw,3.6rem);
-    letter-spacing:.16em;
-    line-height:1.05;
-    direction:ltr;
-    background:linear-gradient(180deg, #f4ead2 20%, var(--gold) 85%);
-    -webkit-background-clip:text; background-clip:text;
-    -webkit-text-fill-color:transparent; color:var(--gold);
-    text-shadow:0 0 34px rgba(214,178,100,.16);
-  }
-  .ribbon{
-    display:inline-block; position:relative;
-    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color:#12292d;
-    font-family:"Cormorant Garamond",serif;
-    font-weight:700; letter-spacing:.6em; text-indent:.6em;
-    direction:ltr; font-size:.95rem;
-    padding:7px 30px; margin-top:12px;
-    clip-path:polygon(12px 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,12px 100%,0 50%);
-    box-shadow:0 6px 22px rgba(0,0,0,.35);
-  }
-  .unit-note{ margin-top:16px; color:var(--muted); font-size:.8rem; letter-spacing:.02em; }
-  .ornament{
-    display:flex; align-items:center; justify-content:center; gap:12px;
-    margin:18px auto 4px; color:var(--gold); opacity:.85;
-  }
-  .ornament::before,.ornament::after{
-    content:""; width:min(120px,26vw); height:1px;
-    background:linear-gradient(to var(--dir,left), var(--gold-soft), transparent);
-  }
-  .ornament::before{ --dir:right; }
-  .diamond{ font-size:.7rem; transform:rotate(45deg); display:inline-block; }
+    <!-- اتصال زودهنگام به سرورها — لود فونت و ثبت سفارش سریع‌تر می‌شه -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="preconnect" href="https://bigmugs-order.sahand-mosanejad4488.workers.dev" />
 
-  /* ---------- nav chips ---------- */
-  nav{
-    position:sticky; top:0; z-index:20;
-    background:rgba(10,29,32,.86);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--gold-faint);
-    padding:11px 14px;
-    display:flex; gap:8px; overflow-x:auto;
-    -webkit-overflow-scrolling:touch; scrollbar-width:none;
-  }
-  nav::-webkit-scrollbar{display:none}
-  nav a{
-    flex:0 0 auto;
-    color:var(--gold);
-    border:1px solid var(--gold-soft);
-    border-radius:999px;
-    padding:7px 18px;
-    font-size:.83rem;
-    text-decoration:none;
-    white-space:nowrap;
-    transition:background .25s,color .25s,border-color .25s;
-  }
-  nav a.active{
-    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
-    color:#12292d; font-weight:700; border-color:transparent;
-  }
-  nav a:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+    <!-- فونت وزیر از CDN -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 
-  /* ---------- menu ---------- */
-  main{ max-width:660px; margin:0 auto; padding:26px 18px 0; position:relative; }
-  section.cat{
-    margin-bottom:26px; scroll-margin-top:72px;
-    background:linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
-    border:1px solid var(--panel-line);
-    border-radius:20px;
-    padding:22px 22px 18px;
-    box-shadow:0 18px 40px -24px rgba(0,0,0,.55);
-    position:relative;
-  }
-  section.cat::before{
-    content:""; position:absolute; inset:6px;
-    border:1px solid rgba(214,178,100,.07);
-    border-radius:15px; pointer-events:none;
-  }
-  .reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
-  .reveal.in{ opacity:1; transform:none; }
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto}
-    .reveal{ opacity:1; transform:none; transition:none; }
-    .cup .steam{ animation:none; stroke-dashoffset:0; }
-  }
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .cat-head{ text-align:center; margin-bottom:14px; }
-  .cat-title{
-    font-family:"Cormorant Garamond",serif;
-    font-weight:700; font-size:1.85rem;
-    color:var(--gold); letter-spacing:.06em; direction:ltr;
-  }
-  .cat-title-fa{ color:var(--muted); font-size:.8rem; margin-top:2px; letter-spacing:.05em; }
-  .cat-divider{
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    margin-top:10px; color:var(--gold); font-size:.55rem;
-  }
-  .cat-divider::before,.cat-divider::after{
-    content:""; height:1px; width:56px;
-    background:linear-gradient(to var(--d,left), var(--gold-soft), transparent);
-  }
-  .cat-divider::before{ --d:right; }
+        body {
+            font-family: 'Vazirmatn', 'Vazir', Tahoma, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 110px; /* جا برای نوار سبد خرید پایین صفحه */
+            color: #ece3d0;
+            background: linear-gradient(165deg, #0d2b23 0%, #0a231d 55%, #071a15 100%);
+            background-attachment: fixed;
+        }
 
-  ul.items{ list-style:none; }
-  li.item{
-    display:flex; align-items:baseline;
-    padding:10px 6px;
-    font-size:.98rem;
-    border-radius:10px;
-    transition:background .2s;
-  }
-  li.item:hover{ background:rgba(214,178,100,.05); }
-  .i-name{ font-weight:400; }
-  .leader{
-    flex:1; margin:0 12px; min-width:26px;
-    border-bottom:1px dotted var(--gold-soft);
-    transform:translateY(-5px);
-  }
-  .i-price{
-    color:var(--gold-bright); font-weight:600;
-    letter-spacing:.03em; white-space:nowrap;
-    font-size:1.02rem;
-  }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 32px;
+            padding: 25px 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+            border: 1px solid rgba(201, 164, 92, 0.35);
+        }
 
-  footer{ text-align:center; color:var(--muted); font-size:.75rem; padding:34px 16px 24px; }
-  footer .fdiv{ color:var(--gold); opacity:.7; margin-bottom:10px; letter-spacing:.6em; text-indent:.6em; }
-  footer .admin-link{
-    color:rgba(159,180,176,.5);
-    text-decoration:none; font-size:.72rem;
-    display:inline-block; margin-top:12px;
-  }
+        /* ======================================================
+           هدر
+           ====================================================== */
+        .header {
+            text-align: center;
+            border-bottom: 1px solid rgba(201, 164, 92, 0.35);
+            padding-bottom: 18px;
+            margin-bottom: 10px;
+        }
 
-  /* ---------- edit mode ---------- */
-  body.editing .leader{ display:none; }
-  body.editing li.item{ gap:8px; }
-  .e-input{
-    background:rgba(9,26,29,.8);
-    border:1px solid rgba(214,178,100,.28);
-    color:var(--cream);
-    border-radius:9px;
-    padding:8px 10px;
-    font:inherit; font-size:.9rem;
-    min-width:0;
-  }
-  .e-input:focus{ outline:2px solid var(--gold-soft); }
-  .e-name{ flex:1; }
-  .e-price{ width:88px; text-align:center; direction:ltr; }
-  .e-del{
-    background:none; border:none; cursor:pointer;
-    color:var(--danger); font-size:1.05rem; padding:4px 6px;
-  }
-  .e-head{ display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; margin-bottom:12px; }
-  .e-cat-name{ width:150px; direction:ltr; text-align:center; font-family:"Cormorant Garamond",serif; font-size:1.1rem; color:var(--gold); }
-  .e-del-cat{
-    color:var(--danger); background:none; cursor:pointer;
-    border:1px solid rgba(224,138,122,.4); border-radius:8px;
-    padding:5px 12px; font:inherit; font-size:.75rem;
-  }
-  .e-add,.e-add-cat{
-    background:none; cursor:pointer;
-    border:1px dashed var(--gold-soft);
-    color:var(--gold); border-radius:12px;
-    padding:9px 16px; font:inherit; font-size:.85rem;
-    margin-top:10px;
-  }
-  .e-add-cat{ display:block; margin:4px auto 24px; }
+        .header .logo-container {
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  .toolbar{
-    position:fixed; bottom:0; right:0; left:0; z-index:50;
-    display:none; gap:10px; justify-content:center; flex-wrap:wrap;
-    background:rgba(9,26,29,.97);
-    border-top:1px solid var(--gold-soft);
-    padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-  }
-  body.editing .toolbar{ display:flex; }
-  .toolbar button{
-    font:inherit; font-size:.9rem; cursor:pointer;
-    border-radius:11px; padding:11px 20px; border:none;
-  }
-  .btn-save{ background:linear-gradient(180deg, var(--gold-bright), var(--gold)); color:#12292d; font-weight:700; box-shadow:0 8px 24px rgba(214,178,100,.25); }
-  .btn-exit{ background:transparent; color:var(--muted); border:1px solid rgba(159,180,176,.4); }
-  .edit-hint{
-    display:none; max-width:640px; margin:16px auto 0; padding:0 18px;
-    color:var(--muted); font-size:.78rem; line-height:2; text-align:center;
-  }
-  body.editing .edit-hint{ display:block; }
-</style>
+        .header .logo-image {
+            max-width: 160px;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+        }
+
+        .header .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 4px;
+            direction: ltr; /* اسم لاتین برند نباید راست‌چین بشه */
+            font-family: Georgia, 'Times New Roman', serif;
+            letter-spacing: 7px;
+        }
+
+        .header .brand .big, .header .brand .mugs {
+            background: linear-gradient(180deg, #eed9a3 0%, #c9a45c 45%, #a87f3e 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header .brand .dot { color: #c9a45c; font-size: 1.6rem; }
+
+        .cup { display: block; margin: 0 auto; }
+
+        .menu-ribbon {
+            display: inline-block;
+            background: linear-gradient(135deg, #eed9a3, #c9a45c 45%, #a87f3e);
+            color: #14100a;
+            font-weight: 700;
+            letter-spacing: 9px;
+            padding: 7px 42px 7px 33px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            direction: ltr;
+            font-family: Georgia, 'Times New Roman', serif;
+            clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0 50%);
+        }
+
+        .header .subtitle {
+            font-size: 0.9rem;
+            color: #b9ac90;
+            margin-top: 12px;
+        }
+
+        .header .subtitle span {
+            background: rgba(201, 164, 92, 0.12);
+            padding: 3px 18px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        /* ======================================================
+           دسته‌بندی‌ها
+           ====================================================== */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin: 20px 0 25px;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid rgba(201, 164, 92, 0.4);
+            border-radius: 18px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .category-card:active { transform: scale(0.95); }
+
+        .category-card.active {
+            border-color: #eed9a3;
+            background: linear-gradient(135deg, rgba(238, 217, 163, 0.95), rgba(168, 127, 62, 0.95));
+            box-shadow: 0 0 20px rgba(201, 164, 92, 0.35);
+        }
+
+        .category-card .cat-icon { font-size: 1.8rem; display: block; }
+        .category-card .cat-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #e5d6b3;
+            margin-top: 4px;
+            display: block;
+        }
+        .category-card.active .cat-name { color: #14100a; }
+
+        /* ======================================================
+           منو
+           ====================================================== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin: 20px 0 10px;
+            min-height: 200px;
+        }
+
+        .menu-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid rgba(201, 164, 92, 0.3);
+            border-radius: 18px;
+            padding: 16px 10px;
+            text-align: center;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .menu-card.in-cart {
+            border-color: #c9a45c;
+            box-shadow: 0 0 0 3px rgba(201, 164, 92, 0.2);
+        }
+
+        /* جای عکس هر آیتم — اگه عکس نباشه آیکون دسته نشون داده می‌شه */
+        .menu-photo {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            min-height: 110px;
+            border-radius: 13px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            background: linear-gradient(145deg, rgba(201,164,92,0.16), rgba(201,164,92,0.05));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-photo img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .menu-photo .ph-icon { font-size: 2.6rem; opacity: 0.55; }
+
+        .menu-category {
+            font-size: 0.65rem;
+            background: rgba(201, 164, 92, 0.15);
+            display: inline-block;
+            padding: 0 14px;
+            border-radius: 30px;
+            color: #d9c08a;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .menu-name { font-weight: 700; font-size: 1.05rem; }
+        .menu-price {
+            font-weight: 600;
+            color: #cfa95e;
+            margin: 6px 0;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #eed9a3, #c9a45c 45%, #a87f3e);
+            color: #14100a;
+            border: none;
+            padding: 7px 22px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-add:active { transform: scale(0.94); }
+
+        .qty-control {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(201, 164, 92, 0.12);
+            border-radius: 30px;
+            padding: 3px 8px;
+        }
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #c9a45c;
+            color: #14100a;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            line-height: 1;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .qty-btn:active { transform: scale(0.9); }
+        .qty-num { font-weight: 800; font-size: 1.05rem; min-width: 22px; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(236, 227, 208, 0.45);
+            font-size: 0.75rem;
+            border-top: 1px solid rgba(201, 164, 92, 0.2);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        /* ======================================================
+           نوار سبد خرید (پایین صفحه)
+           ====================================================== */
+        .cart-bar {
+            position: fixed;
+            bottom: 14px;
+            left: 14px;
+            right: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #eed9a3, #c9a45c 45%, #a87f3e);
+            color: #14100a;
+            border-radius: 60px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(140%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 90;
+        }
+        .cart-bar.show { transform: translateY(0); }
+
+        .cart-info { display: flex; flex-direction: column; font-size: 0.85rem; }
+        .cart-info b { font-size: 1.05rem; }
+
+        .cart-open-btn {
+            background: #0e2b24;
+            color: #eed9a3;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 22px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .cart-open-btn:active { transform: scale(0.96); }
+
+        /* ======================================================
+           صفحه‌ی سبد و ثبت سفارش
+           ====================================================== */
+        .sheet-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 18, 8, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        .sheet-overlay.show { opacity: 1; pointer-events: auto; }
+
+        .cart-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #0e2b24;
+            border: 1px solid rgba(201, 164, 92, 0.4);
+            border-bottom: none;
+            border-radius: 28px 28px 0 0;
+            padding: 14px 22px 26px;
+            transform: translateY(105%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 110;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 -10px 50px rgba(0,0,0,0.25);
+        }
+        .cart-sheet.show { transform: translateY(0); }
+
+        .sheet-handle {
+            width: 44px;
+            height: 5px;
+            background: rgba(201, 164, 92, 0.5);
+            border-radius: 10px;
+            margin: 0 auto 14px;
+        }
+
+        .cart-sheet h3 { color: #ecd9a8; margin-bottom: 12px; }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px dashed rgba(201, 164, 92, 0.3);
+            font-size: 0.95rem;
+        }
+        .cart-item-name { font-weight: 700; flex: 1; }
+        .cart-item-price { color: #cfa95e; font-size: 0.85rem; white-space: nowrap; }
+
+        .sheet-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2rem;
+            padding: 14px 0 6px;
+            color: #ecd9a8;
+        }
+
+        .form-row { margin: 12px 0; }
+        .form-row label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #e5d6b3;
+        }
+        .form-row input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid rgba(201, 164, 92, 0.4);
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.06);
+            color: #f3ead6;
+        }
+        .form-row input:focus {
+            outline: none;
+            border-color: #c9a45c;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #eed9a3, #c9a45c 45%, #a87f3e);
+            color: #14100a;
+            border: none;
+            border-radius: 40px;
+            padding: 15px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 10px;
+            transition: 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled {
+            background: rgba(201, 164, 92, 0.35);
+            color: rgba(236, 227, 208, 0.6);
+            cursor: wait;
+        }
+
+        .success-box {
+            text-align: center;
+            padding: 30px 10px;
+            display: none;
+        }
+        .success-box.show { display: block; }
+        .success-box .success-icon { font-size: 3.5rem; }
+        .success-box h3 { margin: 10px 0 6px; }
+        .success-box p { color: #b9ac90; font-size: 0.9rem; }
+
+        /* ======================================================
+           Toast
+           ====================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d6a4f;
+            color: white;
+            padding: 13px 34px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            z-index: 200;
+            box-shadow: 0 8px 30px rgba(45,106,79,0.3);
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; }
+        .toast.error { background: #b13e3e; box-shadow: 0 8px 30px rgba(177,62,62,0.3); }
+
+        /* ======================================================
+           ریسپانسیو
+           ====================================================== */
+        @media (max-width: 768px) {
+            body { padding: 10px; padding-bottom: 100px; }
+            .container { padding: 15px; }
+            .menu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .header .brand { font-size: 2rem; }
+            .header .logo-image { max-width: 130px; }
+        }
+
+        @media (max-width: 480px) {
+            .menu-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .menu-card { padding: 12px 8px; }
+            .menu-name { font-size: 0.9rem; }
+            .menu-photo { min-height: 90px; }
+            .categories-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .category-card { padding: 12px 6px; }
+            .category-card .cat-icon { font-size: 1.5rem; }
+            .category-card .cat-name { font-size: 0.7rem; }
+            .header .brand { font-size: 1.6rem; }
+            .header .logo-image { max-width: 100px; }
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <div class="header">
+        <div class="logo-container">
+            <svg id="cupSvg" class="cup" width="62" height="58" viewBox="0 0 64 60" fill="none">
+                <path d="M24 5 q3 5 0 10" stroke="#c9a45c" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M32 3 q3 6 0 12" stroke="#c9a45c" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M40 5 q3 5 0 10" stroke="#c9a45c" stroke-width="2" stroke-linecap="round" fill="none" />
+                <path d="M16 23 h32 v9 a16 15 0 0 1 -32 0 z" stroke="#c9a45c" stroke-width="2.5" fill="none" />
+                <path d="M48 26 h3 a6 6 0 0 1 0 12 h-4" stroke="#c9a45c" stroke-width="2.5" fill="none" />
+                <path d="M14 53 h36" stroke="#c9a45c" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+            <img src="logo-bigmugs.webp" alt="BIG MUGS" class="logo-image" style="display:none"
+                 onload="this.style.display='block'; document.getElementById('cupSvg').style.display='none';" />
+        </div>
+        <div class="brand">
+            <span class="big">BIG</span>
+            <span class="dot">•</span>
+            <span class="mugs">MUGS</span>
+        </div>
+        <div><span class="menu-ribbon">MENU</span></div>
+        <div class="subtitle">
+            <span>☕ منوی دیجیتال · سفارش از میز</span>
+        </div>
+    </div>
 
-<div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="categories-grid" id="categoriesGrid"></div>
 
-<header>
-  <svg class="cup" viewBox="0 0 90 78" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path class="steam" d="M38 24c-4-5 4-8 0-13" stroke="#d6b264" stroke-width="2" stroke-linecap="round"/>
-    <path class="steam s2" d="M52 24c-4-5 4-8 0-13" stroke="#d6b264" stroke-width="2" stroke-linecap="round"/>
-    <path d="M24 32h42v10c0 12-9 21-21 21s-21-9-21-21V32z" stroke="#d6b264" stroke-width="2.4" stroke-linejoin="round"/>
-    <path d="M66 36h6a7 7 0 0 1 0 14h-8" stroke="#d6b264" stroke-width="2.4" stroke-linecap="round"/>
-    <path d="M16 70h58" stroke="#d6b264" stroke-width="2.4" stroke-linecap="round"/>
-  </svg>
-  <div class="brand">BIG MUGS</div>
-  <span class="ribbon">MENU</span>
-  <div class="ornament"><span class="diamond">◆</span></div>
-  <div class="unit-note" id="unitNote"></div>
-  <div class="edit-hint">حالت ویرایش: اسم‌ها و قیمت‌ها را مستقیم تغییر بده، آیتم یا دسته اضافه/حذف کن، بعد «دانلود نسخهٔ جدید» را بزن و فایل دانلودشده را جای فایل قبلی روی هاست بگذار. تا فایل جدید را آپلود نکنی، مشتری‌ها همان منوی قبلی را می‌بینند.</div>
-</header>
+    <div class="menu-grid" id="menuGrid"></div>
 
-<nav id="nav" aria-label="دسته‌بندی‌ها"></nav>
-<main id="menu"></main>
-
-<footer>
-  <div class="fdiv">◆ ◆ ◆</div>
-  <div>BIG MUGS Café — Take Away</div>
-  <a href="#" class="admin-link" id="adminLink">✎ ویرایش منو (مخصوص مدیریت)</a>
-</footer>
-
-<div class="toolbar">
-  <button class="btn-save" id="btnSave">⬇ دانلود نسخهٔ جدید منو</button>
-  <button class="btn-exit" id="btnExit">خروج بدون ذخیره</button>
+    <div class="footer">
+        از دکمه‌ی «افزودن» آیتم‌ها رو انتخاب کن، بعد پایین صفحه سفارشت رو ثبت کن ☕
+    </div>
 </div>
 
+<!-- نوار سبد خرید -->
+<div class="cart-bar" id="cartBar">
+    <div class="cart-info">
+        <b id="cartTotal">۰ تومان</b>
+        <span id="cartCount">۰ آیتم</span>
+    </div>
+    <button class="cart-open-btn" onclick="openCart()">🧾 مشاهده و ثبت سفارش</button>
+</div>
+
+<!-- صفحه‌ی سبد -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeCart()"></div>
+<div class="cart-sheet" id="cartSheet">
+    <div class="sheet-handle"></div>
+
+    <div id="cartForm">
+        <h3>🧾 سفارش شما</h3>
+        <div id="cartItems"></div>
+        <div class="sheet-total">
+            <span>جمع کل</span>
+            <span id="sheetTotal">۰ تومان</span>
+        </div>
+
+        <div class="form-row">
+            <label for="tableInput">🪑 شماره میز</label>
+            <input id="tableInput" type="number" inputmode="numeric" min="1" max="99" placeholder="مثلاً ۵" />
+        </div>
+        <div class="form-row">
+            <label for="noteInput">📝 یادداشت (اختیاری)</label>
+            <input id="noteInput" type="text" maxlength="200" placeholder="مثلاً: لاته بدون شکر" />
+        </div>
+
+        <button class="btn-submit" id="submitBtn" onclick="submitOrder()">✅ ثبت سفارش</button>
+    </div>
+
+    <div class="success-box" id="successBox">
+        <div class="success-icon">☕</div>
+        <h3>سفارشت ثبت شد!</h3>
+        <p id="successMsg">تا چند دقیقه‌ی دیگه آماده می‌شه</p>
+    </div>
+</div>
+
+<div class="toast" id="toast">✅</div>
+
 <script>
-/*MENU-DATA-START*/
-window.MENU_DATA = {
-  "unitNote": "قیمت‌ها به هزار تومان",
-  "categories": [
-    {
-      "title": "Coffee",
-      "titleFa": "قهوه",
-      "items": [
-        {"name": "اسپرسو", "price": 137},
-        {"name": "آمریکانو", "price": 137},
-        {"name": "لانگ بلک", "price": 137},
-        {"name": "رومانو", "price": 180},
-        {"name": "لاته", "price": 220},
-        {"name": "فلت وایت", "price": 230},
-        {"name": "لاته نوتلا", "price": 280},
-        {"name": "کاپوچینو", "price": 180},
-        {"name": "کورتادو", "price": 180},
-        {"name": "ماکیاتو", "price": 270},
-        {"name": "موکا وایت", "price": 290},
-        {"name": "اوشن", "price": 210}
-      ]
-    },
-    {
-      "title": "Iced",
-      "titleFa": "نوشیدنی سرد",
-      "items": [
-        {"name": "آیس اسپرسو", "price": 137},
-        {"name": "آیس آمریکانو", "price": 137},
-        {"name": "آیس لاته", "price": 220},
-        {"name": "آیس ماکیاتو", "price": 270},
-        {"name": "آیس موکا", "price": 270},
-        {"name": "آفوگاتو", "price": 285},
-        {"name": "نسکافه سرد", "price": 270},
-        {"name": "آیس اورئو", "price": 280},
-        {"name": "آیس تی لیمو", "price": 235},
-        {"name": "آیس تی پشن فروت", "price": 240}
-      ]
-    },
-    {
-      "title": "Hot Drink",
-      "titleFa": "نوشیدنی گرم",
-      "items": [
-        {"name": "هات چاکلت", "price": 210},
-        {"name": "وایت چاکلت", "price": 210},
-        {"name": "ماسالا", "price": 300},
-        {"name": "ثعلب", "price": 200},
-        {"name": "شیر نسکافه", "price": 210},
-        {"name": "شیر عسل دارچین", "price": 210},
-        {"name": "قهوه ترک", "price": 145},
-        {"name": "قهوه یونانی", "price": 190},
-        {"name": "هات نوتلا", "price": 270}
-      ]
-    },
-    {
-      "title": "Milk Shake",
-      "titleFa": "میلک‌شیک",
-      "items": [
-        {"name": "وانیل", "price": 240},
-        {"name": "کارامل", "price": 240},
-        {"name": "شکلات", "price": 250},
-        {"name": "نوتلا", "price": 285},
-        {"name": "توت فرنگی", "price": 280},
-        {"name": "اسپرسو", "price": 275},
-        {"name": "نسکافه", "price": 265},
-        {"name": "اورئو", "price": 270},
-        {"name": "بادام زمینی", "price": 280},
-        {"name": "لوتوس", "price": 290},
-        {"name": "کیت کت", "price": 295},
-        {"name": "چاکلت بار", "price": 310},
-        {"name": "نورئو", "price": 315},
-        {"name": "بنانس", "price": 330},
-        {"name": "استراپی", "price": 330},
-        {"name": "بیسکوئیت بار", "price": 340}
-      ]
-    },
-    {
-      "title": "Mocktail",
-      "titleFa": "موکتل",
-      "items": [
-        {"name": "اسکارلت", "price": 255},
-        {"name": "بلولایم", "price": 240},
-        {"name": "ویولت", "price": 245},
-        {"name": "چری پانچ", "price": 260},
-        {"name": "پوپا پانچ", "price": 275},
-        {"name": "برمودا", "price": 280},
-        {"name": "لیموناد", "price": 260},
-        {"name": "موهیتو", "price": 275},
-        {"name": "رد موهیتو", "price": 290}
-      ]
-    },
-    {
-      "title": "Herbal",
-      "titleFa": "چای و دمنوش",
-      "items": [
-        {"name": "چای سیاه", "price": 95},
-        {"name": "چای دارچین", "price": 100},
-        {"name": "چای سیب دارچین", "price": 145},
-        {"name": "چای هل دارچین", "price": 155},
-        {"name": "چای زعفران", "price": 210},
-        {"name": "دمنوش گل گاوزبان", "price": 200},
-        {"name": "دمنوش به", "price": 195},
-        {"name": "دمنوش به‌لیمو", "price": 220},
-        {"name": "دمنوش زمستانه", "price": 200},
-        {"name": "دمنوش سرماخوردگی", "price": 200}
-      ]
-    },
-    {
-      "title": "Extras",
-      "titleFa": "اضافات",
-      "items": [
-        {"name": "شات اسپرسو اضافه", "price": 90},
-        {"name": "سیروپ اضافه", "price": 60}
-      ]
-    },
-    {
-      "title": "Cake",
-      "titleFa": "کیک",
-      "items": [
-        {"name": "کیک خیس", "price": 250},
-        {"name": "چیز کیک", "price": 320}
-      ]
-    }
-  ]
-};
-/*MENU-DATA-END*/
+    // ============================================================
+    //  ⭐ تنظیمات — آدرس Worker ارسال سفارش رو اینجا بذار ⭐
+    //  بعد از راه‌اندازی Cloudflare Worker (فایل worker.js)،
+    //  آدرسش رو اینجا کپی کن. مثلاً:
+    //  const ORDER_ENDPOINT = 'https://bigmugs-order.YOUR-NAME.workers.dev';
+    // ============================================================
+    const ORDER_ENDPOINT = 'https://bigmugs-order.sahand-mosanejad4488.workers.dev';
+
+    // ============================================================
+    //  منوی BIG MUGS — برای تغییر قیمت یا اضافه‌کردن آیتم،
+    //  همین لیست رو ویرایش کن و فایل رو دوباره آپلود کن
+    //
+    //  ⭐ عکس آیتم‌ها: فایل عکس رو بنداز توی پوشه‌ی images و
+    //  اسمش رو توی img بنویس. مثال:
+    //  { name: 'لاته', price: 220000, category: 'قهوه', img: 'images/latte.jpg' },
+    //  اگه img خالی بمونه، به‌جای عکس آیکون دسته نشون داده می‌شه.
+    //  (پوشه‌ی images رو هم باید کنار index.html آپلود کنی)
+    // ============================================================
+    let MENU = [
+        // ===== قهوه =====
+        { name: 'اسپرسو', price: 137000, category: 'قهوه', img: '' },
+        { name: 'آمریکانو', price: 137000, category: 'قهوه', img: '' },
+        { name: 'لانگ بلک', price: 137000, category: 'قهوه', img: '' },
+        { name: 'رومانو', price: 180000, category: 'قهوه', img: '' },
+        { name: 'لاته', price: 220000, category: 'قهوه', img: '' },
+        { name: 'فلت وایت', price: 230000, category: 'قهوه', img: '' },
+        { name: 'لاته نوتلا', price: 280000, category: 'قهوه', img: '' },
+        { name: 'کاپوچینو', price: 180000, category: 'قهوه', img: '' },
+        { name: 'کورتادو', price: 180000, category: 'قهوه', img: '' },
+        { name: 'ماکیاتو', price: 270000, category: 'قهوه', img: '' },
+        { name: 'موکا وایت', price: 290000, category: 'قهوه', img: '' },
+        { name: 'اوشن', price: 210000, category: 'قهوه', img: '' },
+
+        // ===== نوشیدنی سرد =====
+        { name: 'آیس اسپرسو', price: 137000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس آمریکانو', price: 137000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس لاته', price: 220000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس ماکیاتو', price: 270000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس موکا', price: 270000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آفوگاتو', price: 285000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'نسکافه سرد', price: 270000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس اورئو', price: 280000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس تی لیمو', price: 235000, category: 'نوشیدنی سرد', img: '' },
+        { name: 'آیس تی پشن فروت', price: 240000, category: 'نوشیدنی سرد', img: '' },
+
+        // ===== نوشیدنی گرم =====
+        { name: 'هات چاکلت', price: 210000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'وایت چاکلت', price: 210000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'ماسالا', price: 300000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'ثعلب', price: 200000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'شیر نسکافه', price: 210000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'شیر عسل دارچین', price: 210000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'قهوه ترک', price: 145000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'قهوه یونانی', price: 190000, category: 'نوشیدنی گرم', img: '' },
+        { name: 'هات نوتلا', price: 270000, category: 'نوشیدنی گرم', img: '' },
+
+        // ===== میلکشیک =====
+        { name: 'وانیل', price: 240000, category: 'میلکشیک', img: '' },
+        { name: 'کارامل', price: 240000, category: 'میلکشیک', img: '' },
+        { name: 'شکلات', price: 250000, category: 'میلکشیک', img: '' },
+        { name: 'نوتلا', price: 285000, category: 'میلکشیک', img: '' },
+        { name: 'توت فرنگی', price: 280000, category: 'میلکشیک', img: '' },
+        { name: 'اسپرسو', price: 275000, category: 'میلکشیک', img: '' },
+        { name: 'نسکافه', price: 265000, category: 'میلکشیک', img: '' },
+        { name: 'اورئو', price: 270000, category: 'میلکشیک', img: '' },
+        { name: 'بادام زمینی', price: 280000, category: 'میلکشیک', img: '' },
+        { name: 'لوتوس', price: 290000, category: 'میلکشیک', img: '' },
+        { name: 'کیت کت', price: 295000, category: 'میلکشیک', img: '' },
+        { name: 'چاکلت بار', price: 310000, category: 'میلکشیک', img: '' },
+        { name: 'نورئو', price: 315000, category: 'میلکشیک', img: '' },
+        { name: 'بانس', price: 330000, category: 'میلکشیک', img: '' },
+        { name: 'استرابری', price: 330000, category: 'میلکشیک', img: '' },
+        { name: 'بیسکوئیت بار', price: 340000, category: 'میلکشیک', img: '' },
+
+        // ===== موکتل =====
+        { name: 'اسکارلت', price: 255000, category: 'موکتل', img: '' },
+        { name: 'بلولایم', price: 240000, category: 'موکتل', img: '' },
+        { name: 'ویولت', price: 245000, category: 'موکتل', img: '' },
+        { name: 'چری پانچ', price: 260000, category: 'موکتل', img: '' },
+        { name: 'باربی', price: 265000, category: 'موکتل', img: '' },
+        { name: 'پوپا پانچ', price: 275000, category: 'موکتل', img: '' },
+        { name: 'برمودا', price: 280000, category: 'موکتل', img: '' },
+        { name: 'لیموناد', price: 260000, category: 'موکتل', img: '' },
+        { name: 'موهیتو', price: 275000, category: 'موکتل', img: '' },
+        { name: 'رد موهیتو', price: 290000, category: 'موکتل', img: '' },
+        { name: 'کوک موهیتو', price: 275000, category: 'موکتل', img: '' },
+
+        // ===== چای و دمنوش =====
+        { name: 'چای سیاه', price: 95000, category: 'چای و دمنوش', img: '' },
+        { name: 'چای دارچین', price: 100000, category: 'چای و دمنوش', img: '' },
+        { name: 'چای سیب دارچین', price: 145000, category: 'چای و دمنوش', img: '' },
+        { name: 'چای هل دارچین', price: 155000, category: 'چای و دمنوش', img: '' },
+        { name: 'چای زعفران', price: 210000, category: 'چای و دمنوش', img: '' },
+        { name: 'دمنوش گل گاوزبان', price: 200000, category: 'چای و دمنوش', img: '' },
+        { name: 'دمنوش به', price: 195000, category: 'چای و دمنوش', img: '' },
+        { name: 'دمنوش بهلیمو', price: 220000, category: 'چای و دمنوش', img: '' },
+        { name: 'دمنوش زمستانه', price: 200000, category: 'چای و دمنوش', img: '' },
+        { name: 'دمنوش سرماخوردگی', price: 200000, category: 'چای و دمنوش', img: '' },
+
+        // ===== اضافات =====
+        { name: 'شات اسپرسو اضافه', price: 90000, category: 'اضافات', img: '' },
+        { name: 'سیروپ اضافه', price: 60000, category: 'اضافات', img: '' },
+
+        // ===== کیک =====
+        { name: 'کیک خیس', price: 0, category: 'کیک', img: '' },
+        { name: 'چیز کیک', price: 0, category: 'کیک', img: '' },
+    ];
+
+    let CATEGORIES = [
+        { id: 'all', name: 'همه', icon: '📋' },
+        { id: 'قهوه', name: 'قهوه', icon: '☕' },
+        { id: 'نوشیدنی سرد', name: 'نوشیدنی سرد', icon: '🧊' },
+        { id: 'نوشیدنی گرم', name: 'نوشیدنی گرم', icon: '☕' },
+        { id: 'میلکشیک', name: 'میلکشیک', icon: '🥤' },
+        { id: 'موکتل', name: 'موکتل', icon: '🍹' },
+        { id: 'چای و دمنوش', name: 'چای و دمنوش', icon: '🍵' },
+        { id: 'اضافات', name: 'Extra', icon: '➕' },
+        { id: 'کیک', name: 'کیک', icon: '🍰' },
+    ];
 </script>
-
 <script>
-(function(){
-  // Snapshot of the page as shipped — used to export an updated copy of this same file.
-  var ORIGINAL_HTML = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
-
-  var data = window.MENU_DATA;
-  var editing = false;
-  var observer = null;
-  var navObserver = null;
-
-  var faDigits = "۰۱۲۳۴۵۶۷۸۹";
-  function toFa(n){ return String(n).replace(/\d/g, function(d){ return faDigits[d]; }); }
-  function slug(i){ return "cat-" + i; }
-  function el(tag, cls){ var e = document.createElement(tag); if (cls) e.className = cls; return e; }
-
-  function render(){
-    document.body.classList.toggle("editing", editing);
-    document.getElementById("unitNote").textContent = data.unitNote || "";
-    if (observer) observer.disconnect();
-    if (navObserver) navObserver.disconnect();
-
-    // nav
-    var nav = document.getElementById("nav");
-    nav.innerHTML = "";
-    data.categories.forEach(function(cat, i){
-      var a = document.createElement("a");
-      a.href = "#" + slug(i);
-      a.id = "navlink-" + i;
-      a.textContent = cat.titleFa || cat.title;
-      nav.appendChild(a);
-    });
-
-    // menu
-    var main = document.getElementById("menu");
-    main.innerHTML = "";
-    data.categories.forEach(function(cat, ci){
-      var sec = el("section", "cat reveal");
-      sec.id = slug(ci);
-
-      if (editing){
-        var head = el("div","e-head");
-        var tIn = el("input", "e-input e-cat-name"); tIn.value = cat.title;
-        tIn.oninput = function(){ cat.title = tIn.value; };
-        var fIn = el("input", "e-input"); fIn.value = cat.titleFa || ""; fIn.placeholder = "نام فارسی";
-        fIn.style.width = "130px"; fIn.style.fontSize = ".8rem";
-        fIn.oninput = function(){ cat.titleFa = fIn.value; };
-        var delC = el("button", "e-del-cat"); delC.type = "button"; delC.textContent = "حذف دسته";
-        delC.onclick = function(){
-          if (confirm("دستهٔ «" + (cat.titleFa || cat.title) + "» با همهٔ آیتم‌هایش حذف شود؟")){
-            data.categories.splice(ci,1); render();
-          }
-        };
-        head.append(tIn, fIn, delC);
-        sec.appendChild(head);
-      } else {
-        var head2 = el("div","cat-head");
-        var t = el("div","cat-title"); t.textContent = cat.title;
-        var tf = el("div","cat-title-fa"); tf.textContent = cat.titleFa || "";
-        var dv = el("div","cat-divider"); dv.textContent = "◆";
-        head2.append(t, tf, dv);
-        sec.appendChild(head2);
-      }
-
-      var ul = el("ul","items");
-      cat.items.forEach(function(item, ii){
-        var li = el("li","item");
-        if (editing){
-          var nIn = el("input","e-input e-name"); nIn.value = item.name;
-          nIn.oninput = function(){ item.name = nIn.value; };
-          var pIn = el("input","e-input e-price");
-          pIn.type = "number"; pIn.inputMode = "numeric"; pIn.placeholder = "قیمت";
-          pIn.value = (item.price == null ? "" : item.price);
-          pIn.oninput = function(){ item.price = pIn.value === "" ? null : Number(pIn.value); };
-          var del = el("button","e-del"); del.type = "button"; del.textContent = "✕";
-          del.setAttribute("aria-label","حذف آیتم");
-          del.onclick = function(){ cat.items.splice(ii,1); render(); };
-          li.append(nIn, pIn, del);
-        } else {
-          var nm = el("span","i-name"); nm.textContent = item.name;
-          var pr = el("span","i-price");
-          pr.textContent = (item.price == null || item.price === "") ? "—" : toFa(item.price);
-          li.append(nm, el("span","leader"), pr);
-        }
-        ul.appendChild(li);
-      });
-      sec.appendChild(ul);
-
-      if (editing){
-        var add = el("button","e-add"); add.type = "button"; add.textContent = "+ آیتم جدید";
-        add.onclick = function(){
-          cat.items.push({name:"", price:null}); render();
-          var s = document.getElementById(slug(ci));
-          var inputs = s.querySelectorAll(".e-name");
-          if (inputs.length) inputs[inputs.length-1].focus();
-        };
-        sec.appendChild(add);
-      }
-      main.appendChild(sec);
-    });
-
-    if (editing){
-      var addCat = el("button","e-add-cat"); addCat.type = "button"; addCat.textContent = "＋ دستهٔ جدید";
-      addCat.onclick = function(){
-        data.categories.push({title:"New", titleFa:"", items:[{name:"", price:null}]});
-        render();
-      };
-      main.appendChild(addCat);
+    // ============================================================
+    //  محافظ: اگه موقع ویرایش لیست منو خطای تایپی پیش بیاد
+    //  (مثلاً ویرگول جا بیفته)، به‌جای صفحه‌ی سفید این پیام میاد
+    // ============================================================
+    if (typeof MENU === 'undefined' || typeof CATEGORIES === 'undefined' || !Array.isArray(MENU)) {
+        document.body.innerHTML = '<div style="text-align:center;padding:80px 20px;color:#ece3d0;"><div style="font-size:3.5rem;">☕</div><h2 style="margin:14px 0 8px;">منو موقتاً در دسترس نیست</h2><p style="opacity:0.7;">لطفاً سفارشتون رو مستقیم به صندوق بگید 🙏</p></div>';
+        throw new Error('MENU is broken — check the menu list in the first script block for syntax errors');
     }
 
-    setupReveal();
-    setupNavHighlight();
-  }
+    // ============================================================
+    //  سبد خرید — کلیدش ایندکس آیتم توی MENU است
+    // ============================================================
+    const CART_KEY = 'bigmugs_cart_v1';
+    let cart = {};
+    try { cart = JSON.parse(localStorage.getItem(CART_KEY)) || {}; } catch { cart = {}; }
 
-  function setupReveal(){
-    var els = document.querySelectorAll(".reveal");
-    if (!("IntersectionObserver" in window)){
-      els.forEach(function(e){ e.classList.add("in"); });
-      return;
+    function saveCart() {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }
-    observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if (en.isIntersecting){ en.target.classList.add("in"); observer.unobserve(en.target); }
-      });
-    }, {threshold:.08});
-    els.forEach(function(e){ observer.observe(e); });
-  }
 
-  function setupNavHighlight(){
-    if (!("IntersectionObserver" in window)) return;
-    navObserver = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if (en.isIntersecting){
-          var i = en.target.id.split("-")[1];
-          document.querySelectorAll("nav a").forEach(function(a){ a.classList.remove("active"); });
-          var link = document.getElementById("navlink-" + i);
-          if (link){
-            link.classList.add("active");
-            link.scrollIntoView({block:"nearest", inline:"center", behavior:"smooth"});
-          }
+    function cartItems() {
+        return Object.entries(cart)
+            .filter(([i, qty]) => qty > 0 && MENU[i])
+            .map(([i, qty]) => ({ ...MENU[i], qty }));
+    }
+
+    function cartTotals() {
+        const items = cartItems();
+        return {
+            count: items.reduce((s, it) => s + it.qty, 0),
+            total: items.reduce((s, it) => s + it.qty * it.price, 0),
+        };
+    }
+
+    function fmt(n) {
+        return n.toLocaleString('fa-IR');
+    }
+
+    function priceLabel(price) {
+        return price > 0 ? fmt(price) + ' تومان' : 'قیمت روز';
+    }
+
+    function changeQty(index, delta) {
+        cart[index] = Math.max(0, Math.min(50, (cart[index] || 0) + delta));
+        if (cart[index] === 0) delete cart[index];
+        saveCart();
+        renderCardControls(index);
+        renderCartBar();
+        if (document.getElementById('cartSheet').classList.contains('show')) {
+            renderCartSheet();
         }
-      });
-    }, {rootMargin:"-30% 0px -60% 0px"});
-    document.querySelectorAll("section.cat").forEach(function(s){ navObserver.observe(s); });
-  }
+    }
 
-  function exportFile(){
-    var json = JSON.stringify(data, null, 2).replace(/</g, "\\u003c");
-    var replaced = ORIGINAL_HTML.replace(
-      /\/\*MENU-DATA-START\*\/[\s\S]*?\/\*MENU-DATA-END\*\//,
-      "/*MENU-DATA-START*/\nwindow.MENU_DATA = " + json + ";\n/*MENU-DATA-END*/"
-    );
-    var blob = new Blob([replaced], {type:"text/html;charset=utf-8"});
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "big-mugs-menu.html";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
-    alert("فایل جدید دانلود شد. آن را جای فایل قبلی روی هاست آپلود کن تا تغییرات برای مشتری‌ها اعمال شود.");
-  }
+    // ============================================================
+    //  رندر دسته‌بندی‌ها و منو
+    // ============================================================
+    let activeCategory = 'all';
 
-  document.getElementById("adminLink").addEventListener("click", function(e){
-    e.preventDefault();
-    editing = true; render();
-    window.scrollTo({top:0});
-  });
-  document.getElementById("btnExit").addEventListener("click", function(){
-    if (confirm("تغییرات ذخیره‌نشده از بین می‌رود. خارج شوی؟")){ location.reload(); }
-  });
-  document.getElementById("btnSave").addEventListener("click", exportFile);
+    function renderCategories() {
+        const grid = document.getElementById('categoriesGrid');
+        grid.innerHTML = CATEGORIES.map(cat => {
+            const activeClass = activeCategory === cat.id ? 'active' : '';
+            return `
+                <div class="category-card ${activeClass}" onclick="selectCategory('${cat.id}')">
+                    <span class="cat-icon">${cat.icon}</span>
+                    <span class="cat-name">${cat.name}</span>
+                </div>
+            `;
+        }).join('');
+    }
 
-  if (location.hash === "#edit"){ editing = true; }
-  render();
-})();
+    function selectCategory(categoryId) {
+        activeCategory = categoryId;
+        renderCategories();
+        renderMenu();
+        document.getElementById('menuGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function catIcon(category) {
+        const c = CATEGORIES.find(x => x.id === category);
+        return c ? c.icon : '☕';
+    }
+
+    function catName(category) {
+        const c = CATEGORIES.find(x => x.id === category);
+        return c ? c.name : category;
+    }
+
+    function photoHTML(item) {
+        const icon = `<span class="ph-icon">${catIcon(item.category)}</span>`;
+        if (!item.img) return `<div class="menu-photo">${icon}</div>`;
+        return `<div class="menu-photo">${icon}<img src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.remove()" /></div>`;
+    }
+
+    function controlsHTML(index) {
+        const qty = cart[index] || 0;
+        if (qty === 0) {
+            return `<button class="btn-add" onclick="changeQty(${index}, 1)">➕ افزودن</button>`;
+        }
+        return `
+            <span class="qty-control">
+                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                <span class="qty-num">${fmt(qty)}</span>
+                <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+            </span>
+        `;
+    }
+
+    function renderCardControls(index) {
+        const holder = document.getElementById('ctrl-' + index);
+        if (holder) holder.innerHTML = controlsHTML(index);
+        const card = document.getElementById('card-' + index);
+        if (card) card.classList.toggle('in-cart', (cart[index] || 0) > 0);
+    }
+
+    function renderMenu() {
+        const grid = document.getElementById('menuGrid');
+
+        const indices = MENU
+            .map((item, i) => ({ item, i }))
+            .filter(({ item }) => activeCategory === 'all' || item.category === activeCategory);
+
+        if (indices.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <span style="font-size:3rem;display:block;">📭</span>
+                    <p style="margin-top:10px;">هیچ محصولی در این دسته وجود ندارد</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = indices.map(({ item, i }) => `
+            <div class="menu-card ${(cart[i] || 0) > 0 ? 'in-cart' : ''}" id="card-${i}">
+                ${photoHTML(item)}
+                <div class="menu-category">${catName(item.category)}</div>
+                <div class="menu-name">${item.name}</div>
+                <div class="menu-price">${priceLabel(item.price)}</div>
+                <div id="ctrl-${i}">${controlsHTML(i)}</div>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    //  نوار و صفحه‌ی سبد
+    // ============================================================
+    function renderCartBar() {
+        const { count, total } = cartTotals();
+        const bar = document.getElementById('cartBar');
+        bar.classList.toggle('show', count > 0);
+        document.getElementById('cartTotal').textContent = fmt(total) + ' تومان';
+        document.getElementById('cartCount').textContent = fmt(count) + ' آیتم';
+    }
+
+    function renderCartSheet() {
+        const items = cartItems();
+        const { total } = cartTotals();
+        const box = document.getElementById('cartItems');
+
+        if (items.length === 0) {
+            closeCart();
+            return;
+        }
+
+        box.innerHTML = items.map(it => {
+            const index = MENU.findIndex(m => m.name === it.name && m.category === it.category);
+            return `
+                <div class="cart-item">
+                    <span class="cart-item-name">${it.name} <span style="color:#aaa;font-size:0.75rem;">· ${catName(it.category)}</span></span>
+                    <span class="cart-item-price">${it.price > 0 ? fmt(it.qty * it.price) : 'قیمت روز'}</span>
+                    <span class="qty-control">
+                        <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                        <span class="qty-num">${fmt(it.qty)}</span>
+                        <button class="qty-btn" onclick="changeQty(${index}, -1)">−</button>
+                    </span>
+                </div>
+            `;
+        }).join('');
+
+        document.getElementById('sheetTotal').textContent = fmt(total) + ' تومان';
+    }
+
+    function openCart() {
+        document.getElementById('successBox').classList.remove('show');
+        document.getElementById('cartForm').style.display = 'block';
+        renderCartSheet();
+        document.getElementById('sheetOverlay').classList.add('show');
+        document.getElementById('cartSheet').classList.add('show');
+    }
+
+    function closeCart() {
+        document.getElementById('sheetOverlay').classList.remove('show');
+        document.getElementById('cartSheet').classList.remove('show');
+    }
+
+    // ============================================================
+    //  ارسال سفارش به تلگرام (از طریق Worker)
+    // ============================================================
+    async function submitOrder() {
+        const table = document.getElementById('tableInput').value.trim();
+        const note = document.getElementById('noteInput').value.trim();
+        const items = cartItems();
+
+        if (items.length === 0) { showToast('⚠️ سبد خالیه', true); return; }
+        if (!table) {
+            showToast('⚠️ شماره میز رو وارد کن', true);
+            document.getElementById('tableInput').focus();
+            return;
+        }
+        if (!ORDER_ENDPOINT) {
+            showToast('⚠️ آدرس سرور سفارش هنوز تنظیم نشده', true);
+            return;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ در حال ارسال…';
+
+        try {
+            const res = await fetch(ORDER_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    table: table,
+                    note: note,
+                    items: items.map(it => ({ name: it.name, category: it.category, qty: it.qty, price: it.price })),
+                }),
+            });
+            if (!res.ok) throw new Error('server error ' + res.status);
+
+            cart = {};
+            saveCart();
+            renderMenu();
+            renderCartBar();
+
+            document.getElementById('cartForm').style.display = 'none';
+            document.getElementById('successMsg').textContent = 'سفارش میز ' + fmt(parseInt(table) || 0) + ' به کافه رسید — تا چند دقیقه‌ی دیگه آماده می‌شه';
+            document.getElementById('successBox').classList.add('show');
+            document.getElementById('noteInput').value = '';
+            setTimeout(closeCart, 3500);
+        } catch (err) {
+            showToast('❌ ارسال نشد — اینترنتت رو چک کن و دوباره بزن', true);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '✅ ثبت سفارش';
+        }
+    }
+
+    // ============================================================
+    //  Toast
+    // ============================================================
+    let toastTimer;
+    function showToast(msg, isError) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.toggle('error', !!isError);
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+    }
+
+    // ============================================================
+    //  همگام‌سازی منو با سرور — اگه صاحب کافه از پنل مدیریت
+    //  (admin.html) منو رو عوض کرده باشه، نسخه‌ی جدید همین‌جا
+    //  جایگزین می‌شه. لیست بالای همین فایل فقط نسخه‌ی پشتیبانه.
+    // ============================================================
+    async function loadServerMenu() {
+        if (!ORDER_ENDPOINT) return;
+        try {
+            const res = await fetch(ORDER_ENDPOINT + '/menu');
+            const data = await res.json();
+            const d = data && data.data;
+            if (!d || !Array.isArray(d.menu) || !d.menu.length) return;
+
+            const sig = (m) => JSON.stringify(m.map(x => [x.name, x.category, x.price, x.img || '']));
+            if (sig(d.menu) === sig(MENU)) return; // فرقی با منوی داخل فایل نداره
+
+            MENU = d.menu;
+            if (Array.isArray(d.categories) && d.categories.length) {
+                CATEGORIES = [{ id: 'all', name: 'همه', icon: '📋' }].concat(d.categories);
+            }
+            cart = {}; // ترتیب آیتم‌ها ممکنه عوض شده باشه
+            saveCart();
+            if (activeCategory !== 'all' && !CATEGORIES.some(c => c.id === activeCategory)) {
+                activeCategory = 'all';
+            }
+            renderCategories();
+            renderMenu();
+            renderCartBar();
+        } catch {
+            /* سرور در دسترس نیست — منوی داخل فایل نمایش داده می‌شه */
+        }
+    }
+
+    // ============================================================
+    //  اجرا
+    // ============================================================
+    renderCategories();
+    renderMenu();
+    renderCartBar();
+    loadServerMenu();
 </script>
 </body>
 </html>
